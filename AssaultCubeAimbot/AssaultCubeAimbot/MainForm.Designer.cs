@@ -40,11 +40,12 @@
             this.TargetPositionYLabel = new System.Windows.Forms.Label();
             this.TargetPositionZLabel = new System.Windows.Forms.Label();
             this.TargetPositionXLabel = new System.Windows.Forms.Label();
-            this.NoRecoilCheckBox = new System.Windows.Forms.CheckBox();
             this.LoopTimer = new System.Windows.Forms.Timer(this.components);
             this.MouseXLabel = new System.Windows.Forms.Label();
             this.MouseYLabel = new System.Windows.Forms.Label();
             this.AimbotCheckBox = new System.Windows.Forms.CheckBox();
+            this.GodModeCheckBox = new System.Windows.Forms.CheckBox();
+            this.InfiniteAmmoCheckBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // FindProcessButton
@@ -152,20 +153,10 @@
             this.TargetPositionXLabel.TabIndex = 10;
             this.TargetPositionXLabel.Text = "X:";
             // 
-            // NoRecoilCheckBox
-            // 
-            this.NoRecoilCheckBox.AutoSize = true;
-            this.NoRecoilCheckBox.Location = new System.Drawing.Point(359, 157);
-            this.NoRecoilCheckBox.Name = "NoRecoilCheckBox";
-            this.NoRecoilCheckBox.Size = new System.Drawing.Size(94, 17);
-            this.NoRecoilCheckBox.TabIndex = 13;
-            this.NoRecoilCheckBox.Text = "Disable Recoil";
-            this.NoRecoilCheckBox.UseVisualStyleBackColor = true;
-            // 
             // LoopTimer
             // 
             this.LoopTimer.Enabled = true;
-            this.LoopTimer.Interval = 33;
+            this.LoopTimer.Interval = 16;
             this.LoopTimer.Tick += new System.EventHandler(this.LoopTimer_Tick);
             // 
             // MouseXLabel
@@ -191,20 +182,41 @@
             this.AimbotCheckBox.AutoSize = true;
             this.AimbotCheckBox.Location = new System.Drawing.Point(359, 134);
             this.AimbotCheckBox.Name = "AimbotCheckBox";
-            this.AimbotCheckBox.Size = new System.Drawing.Size(94, 17);
+            this.AimbotCheckBox.Size = new System.Drawing.Size(154, 17);
             this.AimbotCheckBox.TabIndex = 16;
-            this.AimbotCheckBox.Text = "Enable Aimbot";
+            this.AimbotCheckBox.Text = "Enable Aimbot (Right Click)";
             this.AimbotCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // GodModeCheckBox
+            // 
+            this.GodModeCheckBox.AutoSize = true;
+            this.GodModeCheckBox.Location = new System.Drawing.Point(359, 87);
+            this.GodModeCheckBox.Name = "GodModeCheckBox";
+            this.GodModeCheckBox.Size = new System.Drawing.Size(112, 17);
+            this.GodModeCheckBox.TabIndex = 17;
+            this.GodModeCheckBox.Text = "Enable God Mode";
+            this.GodModeCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // InfiniteAmmoCheckBox
+            // 
+            this.InfiniteAmmoCheckBox.AutoSize = true;
+            this.InfiniteAmmoCheckBox.Location = new System.Drawing.Point(359, 110);
+            this.InfiniteAmmoCheckBox.Name = "InfiniteAmmoCheckBox";
+            this.InfiniteAmmoCheckBox.Size = new System.Drawing.Size(89, 17);
+            this.InfiniteAmmoCheckBox.TabIndex = 18;
+            this.InfiniteAmmoCheckBox.Text = "Infinite Ammo";
+            this.InfiniteAmmoCheckBox.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(518, 277);
+            this.Controls.Add(this.InfiniteAmmoCheckBox);
+            this.Controls.Add(this.GodModeCheckBox);
             this.Controls.Add(this.AimbotCheckBox);
             this.Controls.Add(this.MouseYLabel);
             this.Controls.Add(this.MouseXLabel);
-            this.Controls.Add(this.NoRecoilCheckBox);
             this.Controls.Add(this.TargetPositionYLabel);
             this.Controls.Add(this.TargetPositionZLabel);
             this.Controls.Add(this.TargetPositionXLabel);
@@ -236,11 +248,12 @@
         private System.Windows.Forms.Label TargetPositionYLabel;
         private System.Windows.Forms.Label TargetPositionZLabel;
         private System.Windows.Forms.Label TargetPositionXLabel;
-        private System.Windows.Forms.CheckBox NoRecoilCheckBox;
         private System.Windows.Forms.Timer LoopTimer;
         private System.Windows.Forms.Label MouseXLabel;
         private System.Windows.Forms.Label MouseYLabel;
         private System.Windows.Forms.CheckBox AimbotCheckBox;
+        private System.Windows.Forms.CheckBox GodModeCheckBox;
+        private System.Windows.Forms.CheckBox InfiniteAmmoCheckBox;
     }
 }
 

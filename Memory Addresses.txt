@@ -14,9 +14,9 @@ Mouse Y: base + 10
 Health: base + C4
 Armor: base + C8
 
-Pistol: base + 108
+Pistol: base + 10C
 Pistol clip: base + E0
-SMG: base + 11C
+SMG: base + 120
 SMG clip: base + F4
 
 Enemy offsets should be the same

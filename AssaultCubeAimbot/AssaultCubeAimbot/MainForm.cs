@@ -23,7 +23,7 @@ namespace AssaultCubeAimbot
         #region ------Addresses------
         int MainPlayerBase = 0x50F4F4;
         int[] MainPlayerMultiLvl = new int[] { 0x30 };
-        PlayerDataAddresses MainPlayerOffsets = new PlayerDataAddresses(0x10, 0x14, 0x4, 0xC, 0x8, 0xC8);
+        PlayerDataAddresses MainPlayerOffsets = new PlayerDataAddresses(0x10, 0x14, 0x4, 0xC, 0x8, 0xC8, 0x120, 0x10C);
         
 
         #region ------Enemy Addresses------
@@ -36,6 +36,7 @@ namespace AssaultCubeAimbot
         #endregion
 
         float PI = 3.14159265f;
+        const int RIGHT_MOUSE_BUTTON = 2;
         bool GameFound = false;
         bool FocusingOnEnemy = false;
         int FocusTarget = -1;
@@ -52,8 +53,18 @@ namespace AssaultCubeAimbot
                 int playerBase = MemReader.ReadMultiLevelPointer(MainPlayer.baseAddress, 4, MainPlayer.multilevel);
                 UpdateLabels(playerBase);
 
-                int hotkey = ProcessMemoryReaderApi.GetKeyState(1); //Right mouse button
-                if ((hotkey & 0x8000) != 0)
+                if (GodModeCheckBox.Checked)
+                {
+                    WriteInfiniteHealth(playerBase);
+                }
+
+                if (InfiniteAmmoCheckBox.Checked)
+                {
+                    WriteInfiniteAmmo(playerBase);
+                }
+
+                int hotkey = ProcessMemoryReaderApi.GetKeyState(RIGHT_MOUSE_BUTTON);
+                if (IsKeyHeld(hotkey))
                 {
                     if (AimbotCheckBox.Checked) 
                     {
@@ -69,18 +80,52 @@ namespace AssaultCubeAimbot
             }
             try
             {
-                if (MyProcesses != null)
-                {
-                    if (MyProcesses[0].HasExited)
-                    {
-                        GameFound = false;
-                    }
-                }
+                CheckProcessExists();
             }
             catch(Exception ex)
             {
                 MessageBox.Show("There was an error: " + ex.Message);
             }
+        }
+
+        private void CheckProcessExists()
+        {
+            if (MyProcesses != null)
+            {
+                if (MyProcesses.Length > 0)
+                {
+                    if (MyProcesses[0].HasExited)
+                    {
+                        if (GameFound)
+                        {
+                            SetStatusConnectionLost();
+                            GameFound = false;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void SetStatusConnectionLost()
+        {
+            StatusLabel.Text = "Process Not Found";
+            StatusLabel.ForeColor = Color.Red;
+            FindProcessButton.Enabled = true;
+        }
+
+        private bool IsKeyHeld(int hotkey)
+        {
+            return (hotkey & 0x8000) != 0;
+        }
+        private void WriteInfiniteHealth(int playerBase)
+        {
+            MemReader.WriteInt(playerBase + MainPlayer.offsets.health, 1337);
+        }
+
+        private void WriteInfiniteAmmo(int playerBase)
+        {
+            MemReader.WriteInt(playerBase + MainPlayer.offsets.primaryAmmo, 1337);
+            MemReader.WriteInt(playerBase + MainPlayer.offsets.secondaryAmmo, 1337);
         }
 
         private void UpdateLabels(int playerBase)
@@ -141,48 +186,45 @@ namespace AssaultCubeAimbot
 
         private void AimAtTarget(PlayerDataValues enemy, PlayerDataValues player)
         {
-            float pitchY = (float)Math.Atan2((enemy.yPos - player.yPos), Get3DDistance(enemy, player)) * 180 / PI;
-            float yawX = -(float)Math.Atan2(enemy.xPos - player.xPos, enemy.zPos - player.zPos) / PI * 180 + 180;
+            float MouseTargetX = -(float)Math.Atan2(enemy.xPos - player.xPos, enemy.zPos - player.zPos) / PI * 180 + 180;
+            float MouseTargetY = (float)Math.Asin((enemy.yPos - player.yPos) / Get3DDistance(enemy, player)) * 180 / PI; 
 
             int playerBase = MemReader.ReadMultiLevelPointer(MainPlayer.baseAddress, 4, MainPlayer.multilevel);
 
-            MemReader.WriteFloat(playerBase + MainPlayer.offsets.xMouse, yawX);
-            MemReader.WriteFloat(playerBase + MainPlayer.offsets.yMouse, pitchY);
+            MemReader.WriteFloat(playerBase + MainPlayer.offsets.xMouse, MouseTargetX);
+            MemReader.WriteFloat(playerBase + MainPlayer.offsets.yMouse, MouseTargetY);
         }
 
-        private int FindClosestEnemyIndex(PlayerDataValues[] enemies, PlayerDataValues myPosition) 
+        private int FindClosestEnemyIndex(PlayerDataValues[] enemies, PlayerDataValues myPosition)
         {
-            //Find the minimum value and return the index of it.
-
             float[] distances = new float[enemies.Length];
-            //fill array with all enemy distances
-            for (int i = 0; i < enemies.Length; i++)
+
+            for(int i = 0; i < enemies.Length; i++)
             {
                 if (enemies[i].health > 0)
                 {
                     distances[i] = Get3DDistance(enemies[i], myPosition);
                 }
-                else
+                else 
                 {
                     distances[i] = float.MaxValue;
                 }
             }
-            
-            //create new array, copy the values and sort them.
-            float[] sortedDistances = new float[distances.Length];
-            Array.Copy(distances, sortedDistances, distances.Length);
-            Array.Sort(sortedDistances);
 
-            //find the index of the smallest distance and return it.
-            for (int i = 0; i < distances.Length; i++)
+            float minValue = float.MaxValue;
+            int minvalueIndex = -1;
+            for (int j = 0; j < enemies.Length; j++)
             {
-                if (distances[i] == sortedDistances[0])
+                if (distances[j] < minValue)
                 {
-                    return i;
+                    minValue = distances[j];
+                    minvalueIndex = j;
                 }
             }
-            return -1;
+
+            return minvalueIndex;
         }
+
 
         private float Get3DDistance(PlayerDataValues to, PlayerDataValues from)
         {
@@ -219,6 +261,11 @@ namespace AssaultCubeAimbot
         private void AttachProcess()
         {
             MyProcesses = Process.GetProcessesByName("ac_client");
+            if (MyProcesses.Length == 0)
+            {
+                throw new Exception("Process not found!");
+            }
+
             MainModule = MyProcesses[0].MainModule;
             MemReader.ReadProcess = MyProcesses[0];
             
@@ -226,9 +273,16 @@ namespace AssaultCubeAimbot
 
             MainPlayer.baseAddress = MainPlayerBase;
             MainPlayer.multilevel = MainPlayerMultiLvl;
-            MainPlayer.offsets = new PlayerDataAddresses(MainPlayerOffsets.xMouse, MainPlayerOffsets.yMouse, MainPlayerOffsets.xPos, MainPlayerOffsets.yPos, MainPlayerOffsets.zPos, MainPlayerOffsets.health);
+            MainPlayer.offsets = new PlayerDataAddresses(MainPlayerOffsets.xMouse, MainPlayerOffsets.yMouse, 
+                                                         MainPlayerOffsets.xPos, MainPlayerOffsets.yPos, MainPlayerOffsets.zPos, 
+                                                         MainPlayerOffsets.health, MainPlayerOffsets.primaryAmmo, MainPlayerOffsets.secondaryAmmo);
             SetupEnemyVariables();
 
+            SetStatusToAttached();
+        }
+
+        private void SetStatusToAttached()
+        {
             StatusLabel.Text = "Process Attached!";
             StatusLabel.ForeColor = Color.Green;
             FindProcessButton.Enabled = false;

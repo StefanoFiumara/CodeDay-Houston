@@ -14,8 +14,10 @@ namespace AssaultCubeAimbot
         public int yPos;
         public int zPos;
         public int health;
+        public int primaryAmmo;
+        public int secondaryAmmo;
 
-        public PlayerDataAddresses(int _xMouse, int _yMouse, int _xPos, int _yPos, int _zPos, int _health)
+        public PlayerDataAddresses(int _xMouse, int _yMouse, int _xPos, int _yPos, int _zPos, int _health, int _primaryAmmo, int _secondaryAmmo)
         {
             xMouse = _xMouse;
             yMouse = _yMouse;
@@ -25,6 +27,9 @@ namespace AssaultCubeAimbot
             zPos = _zPos;
 
             health = _health;
+
+            primaryAmmo = _primaryAmmo;
+            secondaryAmmo = _secondaryAmmo;
         }
     }
 
@@ -43,5 +48,7 @@ namespace AssaultCubeAimbot
         public float yPos;
         public float zPos;
         public int health;
+        public int primaryAmmo;
+        public int secondaryAmmo;
     }
 }
