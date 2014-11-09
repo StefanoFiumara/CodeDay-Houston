@@ -32,8 +32,6 @@
             this.FindProcessButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.StatusLabel = new System.Windows.Forms.Label();
-            this.AimbotCheckBox = new System.Windows.Forms.CheckBox();
-            this.TriggerbotCheckbox = new System.Windows.Forms.CheckBox();
             this.PlayerPositionLabel = new System.Windows.Forms.Label();
             this.PlayerPositionXLabel = new System.Windows.Forms.Label();
             this.PlayerPositionZLabel = new System.Windows.Forms.Label();
@@ -44,6 +42,9 @@
             this.TargetPositionXLabel = new System.Windows.Forms.Label();
             this.NoRecoilCheckBox = new System.Windows.Forms.CheckBox();
             this.LoopTimer = new System.Windows.Forms.Timer(this.components);
+            this.MouseXLabel = new System.Windows.Forms.Label();
+            this.MouseYLabel = new System.Windows.Forms.Label();
+            this.AimbotCheckBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // FindProcessButton
@@ -78,26 +79,6 @@
             this.StatusLabel.TabIndex = 2;
             this.StatusLabel.Text = "Process Not Found";
             this.StatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // AimbotCheckBox
-            // 
-            this.AimbotCheckBox.AutoSize = true;
-            this.AimbotCheckBox.Location = new System.Drawing.Point(359, 111);
-            this.AimbotCheckBox.Name = "AimbotCheckBox";
-            this.AimbotCheckBox.Size = new System.Drawing.Size(94, 17);
-            this.AimbotCheckBox.TabIndex = 3;
-            this.AimbotCheckBox.Text = "Enable Aimbot";
-            this.AimbotCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // TriggerbotCheckbox
-            // 
-            this.TriggerbotCheckbox.AutoSize = true;
-            this.TriggerbotCheckbox.Location = new System.Drawing.Point(359, 134);
-            this.TriggerbotCheckbox.Name = "TriggerbotCheckbox";
-            this.TriggerbotCheckbox.Size = new System.Drawing.Size(110, 17);
-            this.TriggerbotCheckbox.TabIndex = 4;
-            this.TriggerbotCheckbox.Text = "Enable Triggerbot";
-            this.TriggerbotCheckbox.UseVisualStyleBackColor = true;
             // 
             // PlayerPositionLabel
             // 
@@ -184,13 +165,45 @@
             // LoopTimer
             // 
             this.LoopTimer.Enabled = true;
+            this.LoopTimer.Interval = 33;
             this.LoopTimer.Tick += new System.EventHandler(this.LoopTimer_Tick);
+            // 
+            // MouseXLabel
+            // 
+            this.MouseXLabel.AutoSize = true;
+            this.MouseXLabel.Location = new System.Drawing.Point(362, 197);
+            this.MouseXLabel.Name = "MouseXLabel";
+            this.MouseXLabel.Size = new System.Drawing.Size(52, 13);
+            this.MouseXLabel.TabIndex = 14;
+            this.MouseXLabel.Text = "MouseX: ";
+            // 
+            // MouseYLabel
+            // 
+            this.MouseYLabel.AutoSize = true;
+            this.MouseYLabel.Location = new System.Drawing.Point(362, 229);
+            this.MouseYLabel.Name = "MouseYLabel";
+            this.MouseYLabel.Size = new System.Drawing.Size(52, 13);
+            this.MouseYLabel.TabIndex = 15;
+            this.MouseYLabel.Text = "MouseY: ";
+            // 
+            // AimbotCheckBox
+            // 
+            this.AimbotCheckBox.AutoSize = true;
+            this.AimbotCheckBox.Location = new System.Drawing.Point(359, 134);
+            this.AimbotCheckBox.Name = "AimbotCheckBox";
+            this.AimbotCheckBox.Size = new System.Drawing.Size(94, 17);
+            this.AimbotCheckBox.TabIndex = 16;
+            this.AimbotCheckBox.Text = "Enable Aimbot";
+            this.AimbotCheckBox.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(518, 277);
+            this.Controls.Add(this.AimbotCheckBox);
+            this.Controls.Add(this.MouseYLabel);
+            this.Controls.Add(this.MouseXLabel);
             this.Controls.Add(this.NoRecoilCheckBox);
             this.Controls.Add(this.TargetPositionYLabel);
             this.Controls.Add(this.TargetPositionZLabel);
@@ -200,8 +213,6 @@
             this.Controls.Add(this.PlayerPositionZLabel);
             this.Controls.Add(this.PlayerPositionXLabel);
             this.Controls.Add(this.PlayerPositionLabel);
-            this.Controls.Add(this.TriggerbotCheckbox);
-            this.Controls.Add(this.AimbotCheckBox);
             this.Controls.Add(this.StatusLabel);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.FindProcessButton);
@@ -217,8 +228,6 @@
         private System.Windows.Forms.Button FindProcessButton;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label StatusLabel;
-        private System.Windows.Forms.CheckBox AimbotCheckBox;
-        private System.Windows.Forms.CheckBox TriggerbotCheckbox;
         private System.Windows.Forms.Label PlayerPositionLabel;
         private System.Windows.Forms.Label PlayerPositionXLabel;
         private System.Windows.Forms.Label PlayerPositionZLabel;
@@ -229,6 +238,9 @@
         private System.Windows.Forms.Label TargetPositionXLabel;
         private System.Windows.Forms.CheckBox NoRecoilCheckBox;
         private System.Windows.Forms.Timer LoopTimer;
+        private System.Windows.Forms.Label MouseXLabel;
+        private System.Windows.Forms.Label MouseYLabel;
+        private System.Windows.Forms.CheckBox AimbotCheckBox;
     }
 }
 

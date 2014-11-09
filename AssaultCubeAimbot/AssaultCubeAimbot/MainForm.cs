@@ -22,12 +22,13 @@ namespace AssaultCubeAimbot
 
         #region ------Addresses------
         int MainPlayerBase = 0x50F4F4;
-        int[] MainPlayerMultiLvl = new int[] { 0x34 };
-        PlayerDataAddresses MainPlayerOffsets = new PlayerDataAddresses(0xC, 0x10, 0x0, 0x8, 0x4, 0xC4);
+        int[] MainPlayerMultiLvl = new int[] { 0x30 };
+        PlayerDataAddresses MainPlayerOffsets = new PlayerDataAddresses(0x10, 0x14, 0x4, 0xC, 0x8, 0xC8);
+        
 
         #region ------Enemy Addresses------
         List<PlayerData> EnemyAddresses = new List<PlayerData>();
-        int[] EnemyOneMultiLvl = new int[] { 0x4, 0x34 };
+        int[] EnemyOneMultiLvl = new int[] { 0x4, 0x30 };
         //int[] EnemyTwoMultiLvl = new int[] { 0x4, 0x34 };
         //int[] EnemyThreeMultiLvl = new int[] { 0x4, 0x34 };
 
@@ -51,11 +52,14 @@ namespace AssaultCubeAimbot
                 int playerBase = MemReader.ReadMultiLevelPointer(MainPlayer.baseAddress, 4, MainPlayer.multilevel);
                 UpdateLabels(playerBase);
 
-                int hotkey = ProcessMemoryReaderApi.GetKeyState(02); //Right mouse button
+                int hotkey = ProcessMemoryReaderApi.GetKeyState(1); //Right mouse button
                 if ((hotkey & 0x8000) != 0)
                 {
-                    FocusingOnEnemy = true;
-                    Aimbot();
+                    if (AimbotCheckBox.Checked) 
+                    {
+                        FocusingOnEnemy = true;
+                        Aimbot();
+                    }
                 }
                 else
                 {
@@ -84,6 +88,14 @@ namespace AssaultCubeAimbot
             PlayerPositionXLabel.Text = "X: " + MemReader.ReadFloat(playerBase + MainPlayer.offsets.xPos);
             PlayerPositionYLabel.Text = "Y: " + MemReader.ReadFloat(playerBase + MainPlayer.offsets.yPos);
             PlayerPositionZLabel.Text = "Z: " + MemReader.ReadFloat(playerBase + MainPlayer.offsets.zPos);
+
+            int enemyBase = MemReader.ReadMultiLevelPointer(EnemyAddresses[0].baseAddress, 4, EnemyAddresses[0].multilevel);
+            TargetPositionXLabel.Text = "X: " + MemReader.ReadFloat(enemyBase + MainPlayer.offsets.xPos);
+            TargetPositionYLabel.Text = "Y: " + MemReader.ReadFloat(enemyBase + MainPlayer.offsets.yPos);
+            TargetPositionZLabel.Text = "Z: " + MemReader.ReadFloat(enemyBase + MainPlayer.offsets.zPos);
+
+            MouseXLabel.Text = "MouseX: " + MemReader.ReadFloat(playerBase + MainPlayer.offsets.xMouse);
+            MouseYLabel.Text = "MouseY: " + MemReader.ReadFloat(playerBase + MainPlayer.offsets.yMouse);
         }
 
         private void Aimbot()
@@ -121,7 +133,7 @@ namespace AssaultCubeAimbot
                     FocusTarget = target;
                     if (EnemyDataValues[target].health > 0)
                     {
-                        
+                        AimAtTarget(EnemyDataValues[target], pDataValues);
                     }
                 }
             }
@@ -129,11 +141,13 @@ namespace AssaultCubeAimbot
 
         private void AimAtTarget(PlayerDataValues enemy, PlayerDataValues player)
         {
-            float pitchX = (float)Math.Asin((enemy.zPos - player.zPos) / Get3DDistance(enemy, player)) * 180 / PI;
-            float yawY = -(float)Math.Atan2(enemy.xPos - player.xPos, enemy.yPos - player.yPos) / PI * 180 + 180;
+            float pitchY = (float)Math.Atan2((enemy.yPos - player.yPos), Get3DDistance(enemy, player)) * 180 / PI;
+            float yawX = -(float)Math.Atan2(enemy.xPos - player.xPos, enemy.zPos - player.zPos) / PI * 180 + 180;
 
+            int playerBase = MemReader.ReadMultiLevelPointer(MainPlayer.baseAddress, 4, MainPlayer.multilevel);
 
-            
+            MemReader.WriteFloat(playerBase + MainPlayer.offsets.xMouse, yawX);
+            MemReader.WriteFloat(playerBase + MainPlayer.offsets.yMouse, pitchY);
         }
 
         private int FindClosestEnemyIndex(PlayerDataValues[] enemies, PlayerDataValues myPosition) 
@@ -180,7 +194,7 @@ namespace AssaultCubeAimbot
         private PlayerDataValues GetPlayerData(PlayerData player)
         {
             PlayerDataValues pDataValues = new PlayerDataValues();
-            int playerBase = MemReader.ReadMultiLevelPointer(player.baseAddress, 4, MainPlayer.multilevel);
+            int playerBase = MemReader.ReadMultiLevelPointer(player.baseAddress, 4, player.multilevel);
             pDataValues.xMouse = MemReader.ReadFloat(playerBase + player.offsets.xMouse);
             pDataValues.yMouse = MemReader.ReadFloat(playerBase + player.offsets.yMouse);
             pDataValues.xPos = MemReader.ReadFloat(playerBase + player.offsets.xPos);
@@ -222,6 +236,11 @@ namespace AssaultCubeAimbot
 
         private void SetupEnemyVariables()
         {
+            PlayerData En1 = new PlayerData();
+            En1.baseAddress = MyProcesses[0].MainModule.BaseAddress.ToInt32() + 0x0010F4F8;
+            En1.multilevel = EnemyOneMultiLvl;
+            En1.offsets = MainPlayer.offsets;
+            EnemyAddresses.Add(En1);
 
         }
     }
