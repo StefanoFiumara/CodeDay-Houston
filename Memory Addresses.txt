@@ -1,0 +1,23 @@
+static: 50f4f4
+offset = 34
+
+points to => 212A1D4
+
+base = 212A1D4
+position X: base + 0
+position Z: base + 4
+position Y: base + 8
+
+Mouse X: base + C
+Mouse Y: base + 10
+
+Health: base + C4
+Armor: base + C8
+
+Pistol: base + 108
+Pistol clip: base + E0
+SMG: base + 11C
+SMG clip: base + F4
+
+Enemy offsets should be the same
+
