@@ -21,3 +21,8 @@ SMG clip: base + F4
 
 Enemy offsets should be the same
 
+Enemy Coordinates:
+base: "ac_client.exe"+0010F4F8
+offsets: 4, f8(34)
+
+08f7fc990
