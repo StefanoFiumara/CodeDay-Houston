@@ -116,6 +116,8 @@ namespace AssaultCubeAimbot
 
         private int FindClosestEnemyIndex(PlayerDataValues[] enemies, PlayerDataValues myPosition) 
         {
+            //Find the minimum value and return the index of it.
+
             float[] distances = new float[enemies.Length];
             //fill array with all enemy distances
             for (int i = 0; i < enemies.Length; i++)
@@ -134,8 +136,6 @@ namespace AssaultCubeAimbot
             float[] sortedDistances = new float[distances.Length];
             Array.Copy(distances, sortedDistances, distances.Length);
             Array.Sort(sortedDistances);
-
-            //Find the minimum value and return the index of it.
 
             //find the index of the smallest distance and return it.
             for (int i = 0; i < distances.Length; i++)
