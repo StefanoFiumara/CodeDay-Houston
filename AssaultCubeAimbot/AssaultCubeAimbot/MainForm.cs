@@ -108,10 +108,32 @@ namespace AssaultCubeAimbot
                     }
                     else
                     {
-                        target = FindClosestEnemyIndex();
+                        target = FindClosestEnemyIndex(EnemyDataValues.ToArray(), pDataValues);
+                    }
+                }
+                else
+                {
+                    target = FindClosestEnemyIndex(EnemyDataValues.ToArray(), pDataValues);
+                }
+
+                if (target != -1)
+                {
+                    FocusTarget = target;
+                    if (EnemyDataValues[target].health > 0)
+                    {
+                        
                     }
                 }
             }
+        }
+
+        private void AimAtTarget(PlayerDataValues enemy, PlayerDataValues player)
+        {
+            float pitchX = (float)Math.Asin((enemy.zPos - player.zPos) / Get3DDistance(enemy, player)) * 180 / PI;
+            float yawY = -(float)Math.Atan2(enemy.xPos - player.xPos, enemy.yPos - player.yPos) / PI * 180 + 180;
+
+
+            
         }
 
         private int FindClosestEnemyIndex(PlayerDataValues[] enemies, PlayerDataValues myPosition) 
